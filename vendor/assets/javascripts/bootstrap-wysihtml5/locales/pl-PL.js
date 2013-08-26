@@ -2,12 +2,15 @@
  * Polish translation for bootstrap-wysihtml5
  */
 (function($){
-    $.fn.wysihtml5.locale["pl-PL"] = {
+    $.fn.wysihtml5.locale["pl-PL"] = {        
         font_styles: {
             normal: "Tekst podstawowy",
             h1: "Nagłówek 1",
             h2: "Nagłówek 2",
-            h3: "Nagłówek 3"
+            h3: "Nagłówek 3",
+            h4: "Nagłówek 4",
+            h5: "Nagłówek 5",
+            h6: "Nagłówek 6"
         },
         emphasis: {
             bold: "Pogrubienie",
@@ -21,12 +24,18 @@
             indent: "Zmniejsz wcięcie"
         },
         link: {
-            insert: "Wstaw odnośnik",
-            cancel: "Anuluj"
+            insert: "Wstaw obrazek",
+            cancel: "Anuluj",
+            target: "Otwórz link w nowym oknie"
         },
         image: {
             insert: "Wstaw obrazek",
             cancel: "Anuluj"
+        },
+        video: {
+            insert: "Wstaw YouTube Video",
+            cancel: "Anuluj",
+            invalid: "wadliwy URL video"
         },
         html: {
             edit: "Edycja HTML"
@@ -43,6 +52,9 @@
             navy: "Granatowy",
             blue: "Niebieski",
             orange: "Pomarańczowy"
+        },
+        formatCode: {
+            highlight: "Highlight Code"
         }
     };
 }(jQuery));
