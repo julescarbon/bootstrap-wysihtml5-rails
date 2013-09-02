@@ -24,7 +24,7 @@
             indent: "Zmniejsz wcięcie"
         },
         link: {
-            insert: "Wstaw obrazek",
+            insert: "Wstaw link",
             cancel: "Anuluj",
             target: "Otwórz link w nowym oknie"
         },
