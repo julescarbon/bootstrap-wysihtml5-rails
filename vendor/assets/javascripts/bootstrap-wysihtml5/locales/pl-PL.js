@@ -33,7 +33,7 @@
             cancel: "Anuluj"
         },
         video: {
-            insert: "Wstaw YouTube Video",
+            insert: "Wstaw YouTube/Vimeo Video",
             cancel: "Anuluj",
             invalid: "wadliwy URL video"
         },
