@@ -344,14 +344,23 @@
                 var linkUrl = urlInput.val();
                 var embedUrl = linkUrl;
 
-                if ( linkUrl.substr(0,31) == 'http://www.youtube.com/watch?v=' ) {
-                    var linkParams = linkUrl.substr(31);
+                if ( linkUrl.match(/http:\/\/(www.)?youtube.com/) ) {
+                    var linkParams = new String(linkUrl.match(/[A-Za-z0-9_]{11}/));
                     embedUrl = 'http://www.youtube.com/embed/' + linkParams.split('&')[0];
 
                     urlInput.val(linkUrl);
                     self.editor.currentView.element.focus();
                     self.editor.composer.commands.exec("insertVideo", { src: embedUrl, width: '600', height: '338' });
-                } else {
+                }
+                else if ( linkUrl.match(/http:\/\/(www.)?vimeo.com/) ) {
+                    var linkParams = new String(linkUrl.match(/\d+/));
+                    embedUrl = '//player.vimeo.com/video/' + linkParams.split('&')[0];
+
+                    urlInput.val(linkUrl);
+                    self.editor.currentView.element.focus();
+                    self.editor.composer.commands.exec("insertVideo", { src: embedUrl, width: '600', height: '338' });
+                }
+                else {
                     errorSpan.show();
                     //urlInput.parent().addClass('error');
                     return false;
@@ -604,7 +613,7 @@
                 cancel: "Cancel"
             },
             video: {
-                insert: "Insert YouTube Video",
+                insert: "Insert YouTube/Vimeo Video",
                 cancel: "Cancel",
                 invalid: "invalid video URL"
             },
