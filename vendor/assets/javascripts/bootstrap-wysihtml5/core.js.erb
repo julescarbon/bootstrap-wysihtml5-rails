@@ -354,7 +354,7 @@
                 }
                 else if ( linkUrl.match(/https?:\/\/(www.)?vimeo.com/) ) {
                     var linkParams = linkUrl.match(/\d+/)[0];
-                    embedUrl = '//player.vimeo.com/video/' + linkParams;
+                    embedUrl = 'http://player.vimeo.com/video/' + linkParams;
 
                     urlInput.val(linkUrl);
                     self.editor.currentView.element.focus();
