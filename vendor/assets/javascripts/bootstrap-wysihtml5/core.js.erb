@@ -848,6 +848,7 @@
 
 
 (function(wysihtml5) {
+	var NODE_NAME = "IFRAME";
   wysihtml5.commands.insertIframe = {
     /**
      * @example
@@ -866,13 +867,53 @@
 			}
     },
 
-    state: function(element) {
-      wysihtml5.commands.insertIframe.state(element);
-    },
+		state: function(composer) {
+				var doc = composer.doc,
+						selectedNode,
+						text,
+						iframesInSelection;
 
-    value: function(element) {
-      wysihtml5.commands.insertIframe.value(element);
-    }
+				if (!wysihtml5.dom.hasElementWithTagName(doc, NODE_NAME)) {
+						return false;
+				}
+
+				selectedNode = composer.selection.getSelectedNode(doc);
+				if (!selectedNode) {
+						return false;
+				}
+
+				if (selectedNode.nodeName === NODE_NAME) {
+						// This works perfectly in IE
+						return selectedNode;
+				}
+
+				if (selectedNode.nodeType !== wysihtml5.ELEMENT_NODE) {
+						return false;
+				}
+
+				text = composer.selection.getText(doc);
+				text = wysihtml5.lang.string(text).trim();
+				if (text) {
+						return false;
+				}
+
+				iframesInSelection = composer.selection.getNodes(doc, wysihtml5.ELEMENT_NODE, function(node) {
+						return node.nodeName === "IFRAME";
+				});
+
+				if (iframesInSelection.length !== 1) {
+						return false;
+				}
+
+				return iframesInSelection[0];
+		},
+
+		value: function(composer) {
+				var iframe = this.state(composer);
+				return iframe && iframe.src;
+		}
+
+
   };
 }(wysihtml5));
 
