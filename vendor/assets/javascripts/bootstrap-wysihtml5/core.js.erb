@@ -104,10 +104,33 @@
                           "<a href='#' class='btn btn-primary' data-dismiss='modal' data-wysihtml5-dialog-action='save'>" + locale.video.insert + "</a>" +
                       "</div>" +
                   "</div>" +
-                  "<a class='btn' data-wysihtml5-command='insertVideo' title='" + locale.video.insert + "'><i class='icon-film'></i></a>" +
+                  "<a class='btn' data-wysihtml5-command='insertVideo' title='" + locale.video.insert + "'><i class='icon-music'></i></a>" +
              "</li>";
         },
 
+        "iframe": function(locale) {
+            return "<li>" +
+                  "<div class='bootstrap-wysihtml5-insert-iframe-modal modal hide fade'>" +
+                      "<div class='modal-header'>" +
+                          "<a class='close' data-dismiss='modal'>&times;</a>" +
+                          "<h3>" + locale.iframe.insert + "</h3>" +
+                      "</div>" +
+                      "<div class='modal-body'>" +
+                          "<div class='control-group'>" +
+                              "<input type='text' data-wysihtml5-dialog-field='src' value='' class='bootstrap-wysihtml5-insert-iframe-url input-xlarge'>" +
+                          "</div>" +
+                          "<div class='control-group error form-inline'>" +
+                            "<label class='iframe-error hide'>" + locale.iframe.invalid + "</label>" +
+                          "</div>" +
+                      "</div>" +
+                      "<div class='modal-footer'>" +
+                          "<a href='#' class='btn' data-dismiss='modal' data-wysihtml5-dialog-action='cancel'>" + locale.iframe.cancel + "</a>" +
+                          "<a href='#' class='btn btn-primary' data-dismiss='modal' data-wysihtml5-dialog-action='save'>" + locale.iframe.insert + "</a>" +
+                      "</div>" +
+                  "</div>" +
+                  "<a class='btn' data-wysihtml5-command='insertIframe' title='" + locale.iframe.insert + "'><i class='icon-film'></i></a>" +
+             "</li>";
+        },
         "html": function(locale, options) {
             var size = (options && options.size) ? ' btn-'+options.size : '';
             return "<li>" +
@@ -231,6 +254,10 @@
 
                     if(key === "video") {
                         this.initInsertVideo(toolbar);
+                    }
+
+                    if(key === "iframe") {
+                        this.initInsertIframe(toolbar);
                     }
 
                     if (key == "format-code") {
@@ -393,6 +420,51 @@
             });
         },
 
+        initInsertIframe: function(toolbar) {
+            var self = this;
+            var insertIframeModal = toolbar.find('.bootstrap-wysihtml5-insert-iframe-modal');
+            var urlInput = insertIframeModal.find('.bootstrap-wysihtml5-insert-iframe-url');
+            var insertButton = insertIframeModal.find('a.btn-primary');
+            var errorSpan = insertIframeModal.find('.iframe-error');
+
+            var insertIframe = function() {
+                errorSpan.hide();
+                //urlInput.parent().removeClass('error');
+                var linkUrl = urlInput.val();
+                var embedUrl = linkUrl;
+
+                if ( linkUrl.match(/iframe/) ) {
+                    self.editor.currentView.element.focus();
+                    self.editor.composer.commands.exec("insertIframe", { src: linkUrl });
+                }
+            };
+
+            urlInput.keypress(function(e) {
+                if(e.which == 13) {
+                    insertIframe();
+                    insertIframeModal.modal('hide');
+                }
+            });
+
+            insertButton.click(insertIframe);
+
+            insertIframeModal.on('shown', function() {
+                urlInput.focus();
+            });
+
+            insertIframeModal.on('hide', function() {
+                self.editor.currentView.element.focus();
+            });
+
+            toolbar.find('a[data-wysihtml5-command=insertIframe]').click(function() {
+                insertIframeModal.modal('show');
+                insertIframeModal.on('click.dismiss.modal', '[data-dismiss="modal"]', function(e) {
+                    e.stopPropagation();
+                });
+                return false;
+            });
+        },
+
         initInsertLink: function(toolbar) {
             var self = this;
             var insertLinkModal = toolbar.find('.bootstrap-wysihtml5-insert-link-modal');
@@ -504,6 +576,7 @@
         "link": true,
         "image": true,
         "video": false,
+        "iframe": false,
         "format-code": false,
         events: {},
         parserRules: {
@@ -616,6 +689,11 @@
                 insert: "Insert YouTube/Vimeo Video",
                 cancel: "Cancel",
                 invalid: "invalid video URL"
+            },
+            iframe: {
+                insert: "Insert Soundcloud Iframe Embed",
+                cancel: "Cancel",
+                invalid: "invalid soundcloud URL"
             },
             html: {
                 edit: "Edit HTML"
@@ -754,12 +832,7 @@
      */
     exec: function(element, command, value) {
       var code = value.src,
-    attributes = {
-      src: wysihtml5.commands.getAttributeValue.exec(code,"src"),
-      width: wysihtml5.commands.getAttributeValue.exec(code,"width"),
-      height: wysihtml5.commands.getAttributeValue.exec(code,"height")
-    },
-    obj = (Object.create) ? Object.create(attributes) : new Object(attributes); //Object.create doesn't work in IE8
+			obj = (Object.create) ? Object.create(attributes) : new Object(attributes); //Object.create doesn't work in IE8
       wysihtml5.commands.insertVideo.exec(element, command, obj);
     },
 
@@ -769,6 +842,36 @@
 
     value: function(element) {
       wysihtml5.commands.insertVideo.value(element);
+    }
+  };
+}(wysihtml5));
+
+
+(function(wysihtml5) {
+  wysihtml5.commands.insertIframe = {
+    /**
+     * @example
+     * wysihtml5.commands.insertEmbedIframe.exec(element, "insertIframe", "<iframe width="560" height="315" src="http://www.youtube.com/embed/dJfSS0ZXYdo" frameborder="0" allowfullscreen></iframe>");
+     */
+    exec: function(element, command, value) {
+			iframe = $(element);
+      composer.selection.insertNode(iframe[0]);
+
+			if (wysihtml5.browser.hasProblemsSettingCaretAfterImg()) {
+				textNode = doc.createTextNode(wysihtml5.INVISIBLE_SPACE);
+				composer.selection.insertNode(textNode);
+				composer.selection.setAfter(textNode);
+			} else {
+				composer.selection.setAfter(iframe);
+			}
+    },
+
+    state: function(element) {
+      wysihtml5.commands.insertIframe.state(element);
+    },
+
+    value: function(element) {
+      wysihtml5.commands.insertIframe.value(element);
     }
   };
 }(wysihtml5));

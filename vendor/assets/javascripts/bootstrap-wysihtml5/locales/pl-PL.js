@@ -37,7 +37,12 @@
             cancel: "Anuluj",
             invalid: "wadliwy URL video"
         },
-        html: {
+        iframe: {
+            insert: "Wstaw Soundcloud",
+            cancel: "Anuluj",
+            invalid: "wadliwy URL soundcloud"
+        },
+				html: {
             edit: "Edycja HTML"
         },
         colours: {
