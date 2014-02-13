@@ -855,7 +855,7 @@
      * wysihtml5.commands.insertEmbedIframe.exec(element, "insertIframe", "<iframe width="560" height="315" src="http://www.youtube.com/embed/dJfSS0ZXYdo" frameborder="0" allowfullscreen></iframe>");
      */
     exec: function(composer, command, value) {
-			iframe = $(value);
+			iframe = $(value.src);
       composer.selection.insertNode(iframe[0]);
 
 			if (wysihtml5.browser.hasProblemsSettingCaretAfterImg()) {
