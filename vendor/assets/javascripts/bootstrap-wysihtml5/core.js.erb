@@ -104,7 +104,7 @@
                           "<a href='#' class='btn btn-primary' data-dismiss='modal' data-wysihtml5-dialog-action='save'>" + locale.video.insert + "</a>" +
                       "</div>" +
                   "</div>" +
-                  "<a class='btn' data-wysihtml5-command='insertVideo' title='" + locale.video.insert + "'><i class='icon-music'></i></a>" +
+                  "<a class='btn' data-wysihtml5-command='insertVideo' title='" + locale.video.insert + "'><i class='icon-film'></i></a>" +
              "</li>";
         },
 
@@ -128,7 +128,7 @@
                           "<a href='#' class='btn btn-primary' data-dismiss='modal' data-wysihtml5-dialog-action='save'>" + locale.iframe.insert + "</a>" +
                       "</div>" +
                   "</div>" +
-                  "<a class='btn' data-wysihtml5-command='insertIframe' title='" + locale.iframe.insert + "'><i class='icon-film'></i></a>" +
+                  "<a class='btn' data-wysihtml5-command='insertIframe' title='" + locale.iframe.insert + "'><i class='icon-music'></i></a>" +
              "</li>";
         },
         "html": function(locale, options) {
@@ -853,8 +853,8 @@
      * @example
      * wysihtml5.commands.insertEmbedIframe.exec(element, "insertIframe", "<iframe width="560" height="315" src="http://www.youtube.com/embed/dJfSS0ZXYdo" frameborder="0" allowfullscreen></iframe>");
      */
-    exec: function(element, command, value) {
-			iframe = $(element);
+    exec: function(composer, command, value) {
+			iframe = $(value);
       composer.selection.insertNode(iframe[0]);
 
 			if (wysihtml5.browser.hasProblemsSettingCaretAfterImg()) {
